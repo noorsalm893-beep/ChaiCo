@@ -350,11 +350,13 @@ export default function HomeScreen({ role }: { role?: string | null }) {
                 {item.category}
               </Text>
               
-              <Text style={[styles.price, { color: colors.black }]}> 
+              <Text style={[styles.price, { color: colors.price }]}> 
+                {formatPrice(item.price)}
+              </Text>
+              
+              <Text style={[styles.description, { color: colors.subtext }]}>
                 {item.description}
               </Text>
-
-              {/* Stock Status */}
               <Text style={[
                 styles.stock,
                 item.stock === 0 ? { color: colors.error } : { color: colors.success }

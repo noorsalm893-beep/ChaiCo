@@ -39,7 +39,7 @@ export const darkTheme = {
   text: palette.beige,
   subtext: palette.beige,
   primary: palette.mossGreen,
-  price: palette.black,
+  price: palette.white,
   border: palette.midnightGreen,
   filterBtn: palette.mossGreen,
   inputBg: palette.darkGreen,
