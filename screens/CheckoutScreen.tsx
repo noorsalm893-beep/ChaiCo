@@ -53,7 +53,7 @@ export default function CheckoutScreen({ navigation }: any) {
           </style>
         </head>
         <body>
-          <h1>🍵 ChaiCo</h1>
+          <h1>ChaiCo</h1>
           <h3>Order Receipt</h3>
           <div class="info">
             <p><strong>Name:</strong> ${fullName}</p>
@@ -72,7 +72,7 @@ export default function CheckoutScreen({ navigation }: any) {
             ${itemsHtml}
           </table>
           <div class="total">Total: ${formatPrice(total)}</div>
-          <div class="footer">Thank you for shopping with ChaiCo! 🍵</div>
+          <div class="footer">Thank you for shopping with ChaiCo!</div>
         </body>
       </html>
     `
@@ -114,11 +114,11 @@ export default function CheckoutScreen({ navigation }: any) {
     setLoading(false)
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 
-    // Send push notification 🔔
+    // Send push notification
     try {
       await sendLocalNotification(
-        'Order Placed! 🎉',
-        'Your ChaiCo order is confirmed and on its way! 🍵'
+        'Order Placed!',
+        'Your ChaiCo order is confirmed and on its way!'
       )
     } catch (e) {
       console.log('Notification error:', e)
@@ -132,7 +132,7 @@ export default function CheckoutScreen({ navigation }: any) {
     }
 
     Alert.alert(
-      'Order Placed! 🎉',
+      'Order Placed!',
       'Your tea is on its way!',
       [{ text: 'OK', onPress: () => navigation.navigate('Tabs') }]
     )
@@ -205,11 +205,11 @@ export default function CheckoutScreen({ navigation }: any) {
         </View>
 
         <TouchableOpacity
-          style={[styles.orderBtn, { backgroundColor: colors.primary }, loading && styles.orderBtnDisabled]}
+          style={[styles.orderBtn, { backgroundColor: loading ? colors.border : colors.primary }]}
           onPress={placeOrder}
           disabled={loading}
         >
-          <Text style={styles.orderBtnText}>
+          <Text style={[styles.orderBtnText, { color: colors.white }]}>
             {loading ? '...' : t('placeOrder')}
           </Text>
         </TouchableOpacity>
@@ -293,11 +293,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 32,
   },
-  orderBtnDisabled: {
-    backgroundColor: '#839958',
-  },
   orderBtnText: {
-    color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 'bold',
   },

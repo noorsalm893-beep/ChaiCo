@@ -47,7 +47,7 @@ export default function NetworkBanner() {
   return (
     <View style={styles.banner}>
       <Text style={styles.bannerText}>
-        📡 No Internet Connection
+        No Internet Connection
       </Text>
     </View>
   )

@@ -1,15 +1,22 @@
 import { useState } from 'react'
-import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native'
+import {
+  View, Text, StyleSheet, Alert, TouchableOpacity
+} from 'react-native'
 import { CameraView, useCameraPermissions } from 'expo-camera'
 import { supabase } from '../lib/supabase'
 import useCartStore from '../store/cartStore'
-import { palette } from '../lib/theme'
+import useSettingsStore from '../store/settingsStore'
+import { lightTheme, darkTheme } from '../lib/theme'
+import { t } from '../lib/i18n'
 
 export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions()
   const [scanned, setScanned] = useState(false)
   const [product, setProduct] = useState<any>(null)
-  const addToCart = useCartStore((state) => state.addToCart) // ✅ inside component
+  const addToCart = useCartStore((state) => state.addToCart)
+  const theme = useSettingsStore((state) => state.theme)
+  const colors = theme === 'dark' ? darkTheme : lightTheme
+  const language = useSettingsStore((state) => state.language)
 
   if (!permission) {
     return <View />
@@ -17,15 +24,17 @@ export default function ScanScreen() {
 
   if (!permission.granted) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.message}>
-          We need camera permission to scan barcodes
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <Text style={[styles.message, { color: colors.primary }]}>
+          {t('scan.needCameraPermission')}
         </Text>
         <TouchableOpacity
-          style={styles.button}
+          style={[styles.button, { backgroundColor: colors.primary }]}
           onPress={requestPermission}
         >
-          <Text style={styles.buttonText}>Grant Permission</Text>
+          <Text style={[styles.buttonText, { color: colors.white }]}>
+            {t('scan.grantPermission')}
+          </Text>
         </TouchableOpacity>
       </View>
     )
@@ -33,7 +42,7 @@ export default function ScanScreen() {
 
   async function handleBarCodeScanned({ data }: { data: string }) {
     if (scanned) return
-    setScanned(true)
+    scanned(true)
 
     const { data: products, error } = await supabase
       .from('products')
@@ -41,30 +50,32 @@ export default function ScanScreen() {
       .eq('barcode', data)
 
     if (error) {
-      Alert.alert('Error', error.message)
+      Alert.alert(t('scan.error'), error.message)
       return
     }
 
     if (products && products.length > 0) {
       setProduct(products[0])
     } else {
-      Alert.alert('Not Found', 'No product found with this barcode!', [
-        { text: 'OK', onPress: () => setScanned(false) }
-      ])
+      Alert.alert(
+        t('scan.notFound'),
+        t('scan.noProductFound'),
+        [{ text: t('scan.ok'), onPress: () => setScanned(false) }]
+      )
     }
   }
 
   if (product) {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Product Found! 🍵</Text>
+        <Text style={styles.title}>{t('scan.productFound')}</Text>
         <View style={styles.card}>
           <Text style={styles.name}>{product.name}</Text>
           <Text style={styles.category}>{product.category}</Text>
           <Text style={styles.price}>${product.price}</Text>
           <Text style={styles.description}>{product.description}</Text>
           <Text style={styles.stock}>
-            {product.stock === 0 ? 'Out of Stock ❌' : `In Stock: ${product.stock} ✅`}
+            {product.stock === 0 ? t('outOfStock') : `${t('inStock')}: ${product.stock}`}
           </Text>
 
           {/* Add to Cart Button */}
@@ -83,7 +94,7 @@ export default function ScanScreen() {
             disabled={product.stock === 0}
           >
             <Text style={styles.addToCartText}>
-              {product.stock === 0 ? 'Out of Stock' : 'Add to Cart 🛒'}
+              {product.stock === 0 ? t('outOfStock') : t('addToCart')}
             </Text>
           </TouchableOpacity>
 
@@ -96,17 +107,19 @@ export default function ScanScreen() {
             setProduct(null)
           }}
         >
-          <Text style={styles.buttonText}>Scan Again</Text>
+          <Text style={styles.buttonText}>{t('scan.scanAgain')}</Text>
         </TouchableOpacity>
       </View>
     )
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Scan a Product 🔍</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.primary }]}>
+        {t('scan.scanAPrompt')}
+      </Text>
       <CameraView
-        style={styles.camera}
+        style={[styles.camera, { backgroundColor: colors.camera }]}
         facing="back"
         onBarcodeScanned={handleBarCodeScanned}
         barcodeScannerSettings={{
@@ -115,10 +128,10 @@ export default function ScanScreen() {
       />
       {scanned && (
         <TouchableOpacity
-          style={styles.button}
+          style={[styles.button, { backgroundColor: colors.primary }]}
           onPress={() => setScanned(false)}
         >
-          <Text style={styles.buttonText}>Tap to Scan Again</Text>
+          <Text style={styles.buttonText}>{t('scan.tapToScanAgain')}</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -128,7 +141,6 @@ export default function ScanScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: palette.beige,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 16,
@@ -136,12 +148,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: palette.darkGreen,
     marginBottom: 16,
   },
   message: {
     fontSize: 16,
-    color: palette.darkGreen,
     textAlign: 'center',
     marginBottom: 16,
   },
@@ -149,47 +159,39 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 350,
     borderRadius: 12,
-    overflow: 'hidden',
+    overflow: '',
   },
   card: {
-    backgroundColor: palette.white,
     borderRadius: 12,
     padding: 16,
     width: '100%',
     borderWidth: 1,
-    borderColor: palette.mossGreen,
     marginBottom: 16,
   },
   name: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: palette.midnightGreen,
     marginBottom: 4,
   },
   category: {
     fontSize: 14,
-    color: palette.darkGreen,
     marginBottom: 4,
   },
   price: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: palette.rosyBrown,
     marginBottom: 4,
   },
   description: {
     fontSize: 13,
-    color: palette.mossGreen,
     marginBottom: 4,
   },
   stock: {
     fontSize: 13,
     fontWeight: '600',
-    color: palette.darkGreen,
     marginBottom: 4,
   },
   button: {
-    backgroundColor: palette.darkGreen,
     padding: 14,
     borderRadius: 10,
     alignItems: 'center',
@@ -197,22 +199,19 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   buttonText: {
-    color: palette.white,
     fontSize: 16,
     fontWeight: 'bold',
   },
   addToCartBtn: {
-    backgroundColor: palette.rosyBrown,
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
     marginTop: 8,
   },
   addToCartBtnDisabled: {
-    backgroundColor: palette.mossGreen,
+    backgroundColor: '#ccc',
   },
   addToCartText: {
-    color: palette.midnightGreen,
     fontWeight: 'bold',
     fontSize: 14,
   },

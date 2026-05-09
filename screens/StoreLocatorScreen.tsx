@@ -70,7 +70,7 @@ export default function StoreLocatorScreen({ navigation }: any) {
           <Text style={[styles.backBtn, { color: colors.primary }]}>← Back</Text>
         </TouchableOpacity>
         <Text style={[styles.loadingText, { color: colors.primary }]}>
-          📍 Getting your location...
+          Getting your location...
         </Text>
       </View>
     )
@@ -85,7 +85,7 @@ export default function StoreLocatorScreen({ navigation }: any) {
           <Text style={[styles.backBtn, { color: colors.primary }]}>← Back</Text>
         </TouchableOpacity>
         <Text style={[styles.title, { color: colors.primary }]}>
-          Store Locator 📍
+          Store Locator
         </Text>
         <Text style={[styles.subtitle, { color: colors.subtext }]}>
           Find ChaiCo stores near you
@@ -111,7 +111,7 @@ export default function StoreLocatorScreen({ navigation }: any) {
               latitude: location.latitude,
               longitude: location.longitude,
             }}
-            title="You are here 📍"
+            title="You are here"
             pinColor="blue"
           />
         )}
@@ -125,7 +125,7 @@ export default function StoreLocatorScreen({ navigation }: any) {
             }}
             title={store.name}
             description={store.address}
-            pinColor="#0A3323"
+            pinColor={colors.primary}
           />
         ))}
       </MapView>
@@ -133,7 +133,7 @@ export default function StoreLocatorScreen({ navigation }: any) {
       {/* Store List */}
       <View style={[styles.storeList, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <Text style={[styles.storeListTitle, { color: colors.text }]}>
-          🏪 Nearby Stores
+          Nearby Stores
         </Text>
         {stores.map((store) => (
           <View key={store.id} style={[styles.storeItem, { borderBottomColor: colors.border }]}>

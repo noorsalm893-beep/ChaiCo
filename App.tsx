@@ -58,7 +58,7 @@ export default function App() {
 
     // Handle deep linking (e.g., chaico://cart from external apps)
     const linkSub = Linking.addEventListener('url', ({ url }) => {
-      console.log('🔗 Deep link received:', url)
+      console.log('Deep link received:', url)
       // Navigation handled by deep linking config in TabNavigator
     })
 
@@ -67,12 +67,12 @@ export default function App() {
 
     // Listen for notifications received in foreground
     const notifSub = Notifications.addNotificationReceivedListener(notification => {
-      console.log('📱 Notification received:', notification)
+      console.log('Notification received:', notification)
     })
 
     // Listen for user interactions with notifications
     const responseSub = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log('👆 Notification tapped:', response)
+      console.log('Notification tapped:', response)
     })
 
     // Cleanup all listeners on component unmount

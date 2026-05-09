@@ -43,10 +43,10 @@ export default function CartScreen({ navigation }: any) {
     return (
       <View style={[styles.emptyContainer, { backgroundColor: colors.background }]}>
         <Text style={[styles.emptyText, { color: colors.primary }]}>
-          Your cart is empty 🛒
+          Your cart is empty
         </Text>
         <Text style={[styles.emptySubText, { color: colors.subtext }]}>
-          Go add some teas! 🍵
+          Go add some teas!
         </Text>
       </View>
     )
@@ -209,7 +209,6 @@ const styles = StyleSheet.create({
   },
   clearText: {
     fontSize: 14,
-    color: '#D3968C',
     fontWeight: '600',
   },
 
@@ -254,7 +253,6 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   qtyBtnText: {
-    color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -269,7 +267,6 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   removeBtnText: {
-    color: '#D3968C',
     fontSize: 13,
     fontWeight: '600',
   },
@@ -293,7 +290,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkoutText: {
-    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
   },

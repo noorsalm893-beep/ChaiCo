@@ -126,17 +126,18 @@ function BuyerTabs({ role }: { role: string | null }): JSX.Element {
         options={{ title: 'Cart' }}
       />
       
-      <Tab.Screen 
+      <Tab.Screen
         name="Wishlist"
         component={WishlistScreen}
         options={{ title: 'Wishlist' }}
       />
-      
-      <Tab.Screen 
+
+      <Tab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{ title: 'Profile' }}
       />
+
     </Tab.Navigator>
   )
 }
@@ -173,17 +174,18 @@ function VendorTabs({ role }: { role: string | null }): JSX.Element {
         options={{ title: 'Add Product' }}
       />
       
-      <Tab.Screen 
+      <Tab.Screen
         name="Orders"
         component={VendorOrdersScreen}
         options={{ title: 'Orders' }}
       />
-      
-      <Tab.Screen 
+
+      <Tab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{ title: 'Profile' }}
       />
+
     </Tab.Navigator>
   )
 }

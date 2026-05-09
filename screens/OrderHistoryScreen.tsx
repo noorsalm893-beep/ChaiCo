@@ -4,7 +4,9 @@ import {
   TouchableOpacity, StyleSheet
 } from 'react-native'
 import { supabase } from '../lib/supabase'
-import { palette } from '../lib/theme'
+import useSettingsStore from '../store/settingsStore'
+import { lightTheme, darkTheme } from '../lib/theme'
+import { t } from '../lib/i18n'
 
 export default function OrderHistoryScreen({ navigation }: any) {
   const [orders, setOrders] = useState<any[]>([])
@@ -13,14 +15,15 @@ export default function OrderHistoryScreen({ navigation }: any) {
   const [hasMore, setHasMore] = useState(true)
   const PAGE_SIZE = 5
 
+  const language = useSettingsStore((state) => state.language)
+
   useEffect(() => {
     getOrders(0)
   }, [])
 
   async function getOrders(pageNum: number) {
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user} } = await supabase.auth.getUser()
     if (!user) return
-
     const from = pageNum * PAGE_SIZE
     const to = from + PAGE_SIZE - 1
 
@@ -53,18 +56,18 @@ export default function OrderHistoryScreen({ navigation }: any) {
 
   function getStatusColor(status: string) {
     switch (status) {
-      case 'pending': return palette.rosyBrown
-      case 'confirmed': return palette.darkGreen
-      case 'delivered': return palette.midnightGreen
-      case 'cancelled': return palette.rosyBrown
-      default: return palette.mossGreen
+      case 'pending': return '#D3968C'
+      case 'confirmed': return '#0A3323'
+      case 'delivered': return '#105666'
+      case 'cancelled': return '#D3968C'
+      default: return '#2E7D32'
     }
   }
 
   if (loading) {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>Loading orders... ⏳</Text>
+        <Text style={styles.emptyText}>{t('orderHistoryLoading')}</Text>
       </View>
     )
   }
@@ -72,21 +75,20 @@ export default function OrderHistoryScreen({ navigation }: any) {
   if (orders.length === 0) {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>No orders yet! 📋</Text>
-        <Text style={styles.emptySubText}>Place your first order! 🍵</Text>
+        <Text style={styles.emptyText}>{t('orderHistoryNone')}</Text>
+        <Text style={styles.emptySubText}>{t('orderHistoryPlaceFirstOrder')}</Text>
       </View>
     )
   }
 
   return (
     <View style={styles.container}>
-
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.backBtn}>← Back</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>Order History 📋</Text>
+        <Text style={styles.title}>{t('orderHistory')}</Text>
       </View>
 
       <FlatList
@@ -94,10 +96,9 @@ export default function OrderHistoryScreen({ navigation }: any) {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
-
             {/* Order ID + Date */}
             <View style={styles.cardHeader}>
-              <Text style={styles.orderId}>Order #{item.id}</Text>
+              <Text style={styles.orderId}>{t('orderHistoryOrderNumber')} {item.id}</Text>
               <Text style={styles.date}>
                 {new Date(item.created_at).toLocaleDateString()}
               </Text>
@@ -117,34 +118,29 @@ export default function OrderHistoryScreen({ navigation }: any) {
 
             {/* Total + Status */}
             <View style={styles.cardFooter}>
-              <Text style={styles.total}>
-                Total: ${item.total.toFixed(2)}
-              </Text>
+              <Text style={styles.total}>{t('orderHistoryTotal')}: ${item.total.toFixed(2)}</Text>
               <View style={[
                 styles.statusBadge,
                 { backgroundColor: getStatusColor(item.status) }
               ]}>
-                <Text style={styles.statusText}>
-                  {item.status.toUpperCase()}
-                </Text>
+                <Text style={styles.statusText}>{t(`orderStatus.${item.status}`)}</Text>
               </View>
             </View>
-
           </View>
         )}
-        ListFooterComponent={
-          hasMore ? (
-            <TouchableOpacity
-              style={styles.loadMoreBtn}
-              onPress={loadMore}
-            >
-              <Text style={styles.loadMoreText}>Load More</Text>
-            </TouchableOpacity>
-          ) : (
-            <Text style={styles.noMoreText}>No more orders</Text>
-          )
-        }
       />
+      ListFooterComponent={
+        hasMore ? (
+          <TouchableOpacity
+            style={styles.loadMoreBtn}
+            onPress={loadMore}
+          >
+            <Text style={styles.loadMoreText}>{t('orderHistoryLoadMore')}</Text>
+          </TouchableOpacity>
+        ) : (
+          <Text style={styles.noMoreText}>{t('orderHistoryNoMore')}</Text>
+        )
+      }
     </View>
   )
 }
@@ -152,24 +148,24 @@ export default function OrderHistoryScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: palette.beige,
+    backgroundColor: '#000000',
     paddingTop: 50,
     paddingHorizontal: 16,
   },
   emptyContainer: {
     flex: 1,
-    backgroundColor: palette.beige,
+    backgroundColor: '#000000',
     alignItems: 'center',
     justifyContent: 'center',
   },
   emptyText: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: palette.darkGreen,
+    color: '#F7F4D5',
   },
   emptySubText: {
     fontSize: 16,
-    color: palette.mossGreen,
+    color: '#F7F4D5',
     marginTop: 8,
   },
   header: {
@@ -177,22 +173,22 @@ const styles = StyleSheet.create({
   },
   backBtn: {
     fontSize: 16,
-    color: palette.darkGreen,
+    color: '#0A3323',
     fontWeight: '600',
     marginBottom: 8,
   },
   title: {
     fontSize: 26,
     fontWeight: 'bold',
-    color: palette.darkGreen,
+    color: '#F7F4D5',
   },
   card: {
-    backgroundColor: palette.white,
+    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: palette.mossGreen,
+    borderColor: '#2E7D32',
   },
   cardHeader: {
     flexDirection: 'row',
@@ -200,16 +196,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: palette.mossGreen,
+    borderBottomColor: '#2E7D32',
   },
   orderId: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: palette.midnightGreen,
+    color: '#105666',
   },
   date: {
     fontSize: 13,
-    color: palette.mossGreen,
+    color: '#2E7D32',
   },
   itemRow: {
     flexDirection: 'row',
@@ -218,11 +214,11 @@ const styles = StyleSheet.create({
   },
   itemName: {
     fontSize: 14,
-    color: palette.midnightGreen,
+    color: '#105666',
   },
   itemPrice: {
     fontSize: 14,
-    color: palette.darkGreen,
+    color: '#0A3323',
     fontWeight: '600',
   },
   cardFooter: {
@@ -232,12 +228,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: palette.mossGreen,
+    borderTopColor: '#2E7D32',
   },
   total: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: palette.midnightGreen,
+    color: '#105666',
   },
   statusBadge: {
     paddingHorizontal: 10,
@@ -245,25 +241,25 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   statusText: {
-    color: palette.white,
+    color: '#FFFFFF',
     fontSize: 12,
     fontWeight: 'bold',
   },
   loadMoreBtn: {
-    backgroundColor: palette.darkGreen,
+    backgroundColor: '#0A3323',
     padding: 12,
     borderRadius: 10,
     alignItems: 'center',
     marginBottom: 20,
   },
   loadMoreText: {
-    color: palette.white,
+    color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 14,
   },
   noMoreText: {
     textAlign: 'center',
-    color: palette.mossGreen,
+    color: '#2E7D32',
     marginBottom: 20,
     fontSize: 14,
   },

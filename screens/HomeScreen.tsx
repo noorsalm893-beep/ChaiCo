@@ -23,6 +23,7 @@ import { supabase } from '../lib/supabase'
 import { formatPrice } from '../lib/currency'
 import { t } from '../lib/i18n'
 import { lightTheme, darkTheme } from '../lib/theme'
+import { Ionicons } from '@expo/vector-icons'
 
 // State Management
 import useCartStore from '../store/cartStore'
@@ -334,9 +335,11 @@ export default function HomeScreen({ role }: { role?: string | null }) {
                 style={styles.heartBtn}
                 onPress={() => addToWishlist(item.id)}
               >
-                <Text style={styles.heartText}>
-                  {wishlistedIds.includes(item.id) ? '❤️' : '🤍'}
-                </Text>
+                <Ionicons
+                  name={wishlistedIds.includes(item.id) ? 'heart' : 'heart-outline'}
+                  size={24}
+                  color={wishlistedIds.includes(item.id) ? '#FF0000' : '#FFFFFF'}
+                />
               </TouchableOpacity>
             )}
 

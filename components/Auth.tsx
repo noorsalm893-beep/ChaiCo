@@ -90,10 +90,10 @@ export default function Auth() {
           })
 
         if (profileError) {
-          console.error('❌ Profile creation error:', profileError)
+          console.error('Profile creation error:', profileError)
           Alert.alert('Profile Error', 'Could not save your profile')
         } else {
-          console.log('✅ Profile created with role:', role)
+          console.log('Profile created with role:', role)
         }
       }
 
@@ -114,7 +114,7 @@ export default function Auth() {
   return (
     <View style={styles.container}>
       {/* Header Section */}
-      <Text style={styles.logo}>🍵</Text>
+      <Text style={styles.logo}>CH</Text>
       <Text style={styles.appName}>ChaiCo</Text>
       <Text style={styles.subtitle}>
         {isLogin ? 'Welcome Back!' : 'Create Account'}

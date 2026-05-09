@@ -64,14 +64,14 @@ export default function VendorAddProductScreen({ navigation }: any) {
   async function uploadImage(uri: string): Promise<string> {
     const fileName = `product_${Date.now()}.jpg`
 
-    console.log('📤 Starting upload for:', fileName)
+    console.log('Starting upload for:', fileName)
 
     // Read file as base64
     const base64 = await FileSystem.readAsStringAsync(uri, {
       encoding: 'base64',
     })
 
-    console.log('📦 Base64 length:', base64.length)
+    console.log('Base64 length:', base64.length)
 
     // Upload to Supabase Storage
     const { data, error } = await supabase.storage
@@ -82,11 +82,11 @@ export default function VendorAddProductScreen({ navigation }: any) {
       })
 
     if (error) {
-      console.log('❌ Upload error:', error)
+      console.log('Upload error:', error)
       throw error
     }
 
-    console.log('✅ Upload success:', data)
+    console.log('Upload success:', data)
 
     // Get public URL
     const { data: { publicUrl } } = supabase.storage
@@ -113,7 +113,7 @@ export default function VendorAddProductScreen({ navigation }: any) {
 
     try {
       // Upload image first
-      console.log('🚀 Starting product upload...')
+      console.log('Starting product upload...')
       const imageUrl = await uploadImage(image)
 
       // Save product to DB
@@ -133,13 +133,13 @@ export default function VendorAddProductScreen({ navigation }: any) {
         return
       }
 
-      Alert.alert('Success! 🎉', 'Product added with image!', [
+      Alert.alert('Success!', 'Product added with image!', [
         { text: 'OK', onPress: () => navigation.goBack() }
       ])
 
     } catch (e: any) {
-      console.log('❌ Full error:', e)
-      Alert.alert('Upload Failed ❌', e.message ?? 'Something went wrong')
+      console.log('Full error:', e)
+      Alert.alert('Upload Failed', e.message ?? 'Something went wrong')
     } finally {
       setLoading(false)
     }
@@ -157,7 +157,7 @@ export default function VendorAddProductScreen({ navigation }: any) {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Text style={[styles.backBtn, { color: colors.primary }]}>← Back</Text>
           </TouchableOpacity>
-          <Text style={[styles.title, { color: colors.primary }]}>Add Product ➕</Text>
+          <Text style={[styles.title, { color: colors.primary }]}>Add Product</Text>
         </View>
 
         {/* Image Picker */}
@@ -167,7 +167,7 @@ export default function VendorAddProductScreen({ navigation }: any) {
           ) : (
             <View style={[styles.imagePlaceholder, { backgroundColor: colors.filterBtn }]}>
               <Text style={[styles.imagePlaceholderText, { color: colors.subtext }]}>
-                No image selected 📷
+                No image selected
               </Text>
             </View>
           )}
@@ -177,14 +177,14 @@ export default function VendorAddProductScreen({ navigation }: any) {
               style={[styles.imageBtn, { backgroundColor: colors.primary }]}
               onPress={pickImage}
             >
-              <Text style={styles.imageBtnText}>📱 Gallery</Text>
+              <Text style={styles.imageBtnText}>Gallery</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.imageBtn, { backgroundColor: colors.primary }]}
               onPress={takePhoto}
             >
-              <Text style={styles.imageBtnText}>📷 Camera</Text>
+              <Text style={styles.imageBtnText}>Camera</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -267,7 +267,7 @@ export default function VendorAddProductScreen({ navigation }: any) {
           disabled={loading}
         >
           <Text style={styles.submitBtnText}>
-            {loading ? 'Uploading Image...' : 'Add Product 🍵'}
+            {loading ? 'Uploading Image...' : 'Add Product'}
           </Text>
         </TouchableOpacity>
 

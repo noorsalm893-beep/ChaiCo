@@ -16,7 +16,6 @@ const currencies = [
 
 const languages = [
   { code: 'en', label: '🇺🇸 English' },
-  { code: 'ar', label: '🇪🇬 Arabic' },
   { code: 'fr', label: '🇫🇷 French' },
   { code: 'es', label: '🇪🇸 Spanish' },
   { code: 'ja', label: '🇯🇵 Japanese' },
@@ -37,50 +36,9 @@ export default function SettingsScreen({ navigation }: any) {
         <Text style={[styles.title, { color: colors.primary }]}>Language & Currency 🌍</Text>
       </View>
 
-      {/* Theme Section */}
-      <View style={[styles.section, { backgroundColor: colors.card, borderColor: colors.border }]}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Theme 🌙</Text>
-
-        <TouchableOpacity
-          style={[
-            styles.optionBtn,
-            { backgroundColor: colors.filterBtn, borderColor: colors.border },
-            theme === 'light' && { backgroundColor: lightTheme.primary, borderColor: lightTheme.primary },
-          ]}
-          onPress={() => setTheme('light')}
-        >
-          <Text style={[
-            styles.optionText,
-            { color: colors.text },
-            theme === 'light' && styles.optionTextActive
-          ]}>
-            ☀️ Light Mode
-          </Text>
-          {theme === 'light' && <Text style={styles.checkmark}>✓</Text>}
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.optionBtn,
-            { backgroundColor: colors.filterBtn, borderColor: colors.border },
-            theme === 'dark' && { backgroundColor: darkTheme.primary, borderColor: darkTheme.primary },
-          ]}
-          onPress={() => setTheme('dark')}
-        >
-          <Text style={[
-            styles.optionText,
-            { color: colors.text },
-            theme === 'dark' && styles.optionTextActive
-          ]}>
-            🌙 Dark Mode
-          </Text>
-          {theme === 'dark' && <Text style={styles.checkmark}>✓</Text>}
-        </TouchableOpacity>
-      </View>
-
       {/* Currency Section */}
       <View style={[styles.section, { backgroundColor: colors.card, borderColor: colors.border }]}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Currency 💰</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Currency</Text>
         {currencies.map((item) => (
           <TouchableOpacity
             key={item.code}
@@ -107,7 +65,7 @@ export default function SettingsScreen({ navigation }: any) {
 
       {/* Language Section */}
       <View style={[styles.section, { backgroundColor: colors.card, borderColor: colors.border }]}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Language 🗣️</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>Language</Text>
         {languages.map((item) => (
           <TouchableOpacity
             key={item.code}

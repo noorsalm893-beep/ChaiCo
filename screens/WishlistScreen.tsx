@@ -53,8 +53,8 @@ export default function WishlistScreen() {
   if (wishlist.length === 0) {
     return (
       <View style={[styles.emptyContainer, { backgroundColor: colors.background }]}>
-        <Text style={[styles.emptyText, { color: colors.primary }]}>{t('wishlist')} ❤️</Text>
-        <Text style={[styles.emptySubText, { color: colors.subtext }]}>Add some teas you love! 🍵</Text>
+        <Text style={[styles.emptyText, { color: colors.primary }]}>{t('wishlist')}</Text>
+        <Text style={[styles.emptySubText, { color: colors.subtext }]}>Add some teas you love!</Text>
       </View>
     )
   }
@@ -90,15 +90,15 @@ export default function WishlistScreen() {
                   quantity: 1,
                 })}
               >
-                <Text style={styles.addToCartText}>{t('addToCart')}</Text>
+                <Text style={[styles.addToCartText, { color: colors.white }]}>{t('addToCart')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.removeBtn}
                 onPress={() => removeFromWishlist(item.id)}
               >
-                <Text style={[styles.removeBtnText, { color: colors.error }]}>      
-                  {t('remove')} ❌
+                <Text style={[styles.removeBtnText, { color: colors.error }]}>
+                  {t('remove')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   addToCartText: {
-    color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: 13,
   },
@@ -180,7 +179,6 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   removeBtnText: {
-    color: '#D3968C',
     fontSize: 13,
     fontWeight: '600',
   },

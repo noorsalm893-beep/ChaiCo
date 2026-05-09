@@ -7,6 +7,7 @@ import { supabase } from '../lib/supabase'
 import useSettingsStore from '../store/settingsStore'
 import { lightTheme, darkTheme } from '../lib/theme'
 import { formatPrice } from '../lib/currency'
+import { t } from '../lib/i18n'
 
 export default function VendorOrdersScreen() {
   const [orders, setOrders] = useState<any[]>([])
@@ -14,6 +15,7 @@ export default function VendorOrdersScreen() {
 
   const theme = useSettingsStore((state) => state.theme)
   const colors = theme === 'dark' ? darkTheme : lightTheme
+  const language = useSettingsStore((state) => state.language)
 
   useEffect(() => {
     getOrders()
@@ -69,7 +71,7 @@ export default function VendorOrdersScreen() {
   if (loading) {
     return (
       <View style={[styles.emptyContainer, { backgroundColor: colors.background }]}>
-        <Text style={[styles.emptyText, { color: colors.primary }]}>Loading orders... ⏳</Text>
+        <Text style={[styles.emptyText, { color: colors.primary }]}>{t('vendorOrders.loading')}</Text>
       </View>
     )
   }
@@ -77,9 +79,9 @@ export default function VendorOrdersScreen() {
   if (orders.length === 0) {
     return (
       <View style={[styles.emptyContainer, { backgroundColor: colors.background }]}>
-        <Text style={[styles.emptyText, { color: colors.primary }]}>No orders yet! 📋</Text>
+        <Text style={[styles.emptyText, { color: colors.primary }]}>{t('vendorOrders.none')}</Text>
         <Text style={[styles.emptySubText, { color: colors.subtext }]}>
-          Orders will appear here 🍵
+          {t('vendorOrders.willAppearHere')}
         </Text>
       </View>
     )
@@ -90,9 +92,9 @@ export default function VendorOrdersScreen() {
 
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <Text style={[styles.title, { color: colors.primary }]}>Orders 📋</Text>
+        <Text style={[styles.title, { color: colors.primary }]}>{t('vendorOrders.title')}</Text>
         <Text style={[styles.count, { color: colors.subtext }]}>
-          {orders.length} orders
+          {orders.length} {t('vendorOrders.count')}
         </Text>
       </View>
 
@@ -105,7 +107,7 @@ export default function VendorOrdersScreen() {
             {/* Order Header */}
             <View style={styles.cardHeader}>
               <Text style={[styles.orderId, { color: colors.text }]}>
-                Order #{item.id}
+                {t('vendorOrders.orderNumber')} {item.id}
               </Text>
               <Text style={[styles.date, { color: colors.subtext }]}>
                 {new Date(item.created_at).toLocaleDateString()}
@@ -127,10 +129,10 @@ export default function VendorOrdersScreen() {
             {/* Total + Status */}
             <View style={[styles.cardFooter, { borderTopColor: colors.border }]}>
               <Text style={[styles.total, { color: colors.text }]}>
-                Total: {formatPrice(item.total)}
+                {t('vendorOrders.total')}: {formatPrice(item.total)}
               </Text>
               <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.status) }]}>
-                <Text style={styles.statusText}>{item.status.toUpperCase()}</Text>
+                <Text style={styles.statusText}>{t(`vendorOrderStatus.${item.status}`)}</Text>
               </View>
             </View>
 
@@ -139,25 +141,25 @@ export default function VendorOrdersScreen() {
               {item.status === 'pending' && (
                 <>
                   <TouchableOpacity
-                    style={[styles.statusBtn, { backgroundColor: '#0A3323' }]}
+                    style={[styles.statusBtn, { backgroundColor: getStatusColor('confirmed') }]}
                     onPress={() => updateStatus(item.id, 'confirmed')}
                   >
-                    <Text style={styles.statusBtnText}>✅ Confirm</Text>
+                    <Text style={styles.statusBtnText}>{t('vendorOrders.confirm')}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={[styles.statusBtn, { backgroundColor: '#D3968C' }]}
+                    style={[styles.statusBtn, { backgroundColor: getStatusColor('cancelled') }]}
                     onPress={() => updateStatus(item.id, 'cancelled')}
                   >
-                    <Text style={styles.statusBtnText}>❌ Cancel</Text>
+                    <Text style={styles.statusBtnText}>{t('vendorOrders.cancel')}</Text>
                   </TouchableOpacity>
                 </>
               )}
               {item.status === 'confirmed' && (
                 <TouchableOpacity
-                  style={[styles.statusBtn, { backgroundColor: '#105666' }]}
+                  style={[styles.statusBtn, { backgroundColor: getStatusColor('delivered') }]}
                   onPress={() => updateStatus(item.id, 'delivered')}
                 >
-                  <Text style={styles.statusBtnText}>🚚 Mark Delivered</Text>
+                  <Text style={styles.statusBtnText}>{t('vendorOrders.markDelivered')}</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -215,7 +217,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#839958',
   },
   orderId: {
     fontSize: 16,
